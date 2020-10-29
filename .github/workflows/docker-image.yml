@@ -15,12 +15,19 @@ jobs:
     steps:
     - uses: actions/checkout@v2
   
-    - name: Set up Docker Buildx
-      id: buildx
-      uses: crazy-max/ghaction-docker-buildx@v1
+#    - name: Set up Docker Buildx
+#      id: buildx
+#      uses: crazy-max/ghaction-docker-buildx@v1
+#      with:
+#        version: latest
+    -
+      name: Set up QEMU
+      id: qemu
+      uses: docker/setup-qemu-action@v1
       with:
-        version: latest
-      
+        image: tonistiigi/binfmt:latest
+        platforms: all
+        
     - name: Build the Docker image
       run: |
-        docker buildx build --platform=linux/arm/v6 . --file Dockerfile --tag bencardinal/assistant-relay-arm32v6:$(date +%s)
+        docker build --platform=linux/arm/v6 . --file Dockerfile --tag bencardinal/assistant-relay-arm32v6:$(date +%s)
