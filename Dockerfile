@@ -1,4 +1,4 @@
-FROM arm32v6/node:lts-alpine
+FROM node:lts-alpine
 
 ENV PYTHONUNBUFFERED=1
 RUN apk add --update --no-cache --virtual .gyp \
