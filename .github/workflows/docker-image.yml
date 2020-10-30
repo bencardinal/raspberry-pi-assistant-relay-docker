@@ -30,11 +30,13 @@ jobs:
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        GITHUB_SHA: ${{ github.sha }}
       run: |
         echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
 
     - name: Build the Docker image
       run: |
         docker buildx build --platform=linux/amd64,linux/arm/v6,linux/arm/v7 . \
-        --push --file Dockerfile --tag bencardinal/assistant-relay:$(date +%s)
-
+        --push --file Dockerfile --tag bencardinal/assistant-relay:$(date +%s) \
+        --tag bencardinal/assistant-relay:${GITHUB_SHA::8} \
+        --tag bencardinal/assistant-relay:latest
