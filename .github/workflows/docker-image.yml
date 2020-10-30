@@ -30,4 +30,5 @@ jobs:
         
     - name: Build the Docker image
       run: |
-        docker build --platform=linux/arm/v6 . --file Dockerfile --tag bencardinal/assistant-relay-arm32v6:$(date +%s)
+        docker buildx build --platform=linux/amd64,linux/arm/v6,linux/arm/v7 . \
+        --file Dockerfile --tag bencardinal/assistant-relay:$(date +%s)
