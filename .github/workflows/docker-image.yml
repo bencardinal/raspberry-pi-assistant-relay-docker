@@ -15,11 +15,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
   
-#    - name: Set up Docker Buildx
-#      id: buildx
-#      uses: crazy-max/ghaction-docker-buildx@v1
-#      with:
-#        version: latest
     - name: Set up QEMU
       id: qemu
       uses: docker/setup-qemu-action@v1
@@ -30,7 +25,16 @@ jobs:
     - name: Setup buildx
       run: docker buildx create --use
         
+    - name: Docker Login
+      if: success()
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
+
     - name: Build the Docker image
       run: |
         docker buildx build --platform=linux/amd64,linux/arm/v6,linux/arm/v7 . \
-        --file Dockerfile --tag bencardinal/assistant-relay:$(date +%s)
+        --push --file Dockerfile --tag bencardinal/assistant-relay:$(date +%s)
+
